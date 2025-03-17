@@ -298,8 +298,8 @@
     </div>
 
     <script>
-        const API_URL = "https://orchestra.ratpdev.com/api/v2/traffic-alert?reseau=tp2a&lang=fr";
-        const LINES_API_URL = "https://orchestra.ratpdev.com/api/v2/lines-discovery?reseau=tp2a";
+        const API_URL = "https://orchestra.ratpdev.com/api/v2/traffic-alert?reseau=narbonne&lang=fr";
+        const LINES_API_URL = "https://orchestra.ratpdev.com/api/v2/lines-discovery?reseau=narbonne";
 
         const alertsContainer = document.getElementById('alerts');
 
@@ -398,10 +398,10 @@
 			qrContainer.classList.add('qrContainer');
 			
 			//création de l'image QR code
-		const qrCode = document.createElement('img');
-        qrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=552D6d&data=${encodeURIComponent(url)}`;
-        qrCode.alt = 'QR Code';
-        qrCode.classList.add('qr-code');
+			const qrCode = document.createElement('img');
+			qrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=552D6d&data=${encodeURIComponent(url)}`;
+			qrCode.alt = 'QR Code';
+			qrCode.classList.add('qr-code');
         
 			//Ajout du QR code dans son conteneur
 			qrContainer.appendChild(qrCode);
@@ -441,18 +441,22 @@
 					console.warn ('Aucune URL détectée, QR Code non généré.');
 				}
 
-                const sortedLines = Object.values(alert.consequences['0'].scope.lines)
-					.map(line => ({ ...line, Order: linesInfo[line.route_short_name]?.Order || 0}))
-					.sort((a, b) => a.Order - b.Order) //tri des lignes sur order
+                const sortedLines = alert.consequences['0'].scope?.lines
+					? Object.values(alert.consequences['0'].scope.lines)
+						.map(line => ({ ...line, Order: linesInfo[line.route_short_name]?.Order || 0}))
+						.sort((a, b) => a.Order - b.Order) //tri des lignes sur order
+					: []
 				
 				console.log('Sorted Lines:', sortedLines);
 				
-				const routeShortNames = Object.values(alert.consequences['0'].scope.lines)    
+				const routeShortNames = alert.consequences['0'].scope?.lines
+					? Object.values(alert.consequences['0'].scope.lines)    
 					.map(line => {
                         const colors = linesInfo[line.route_short_name] || { backgroundColor: '#8e76a0', textColor: '#ffffff' };
                         return `<div class="line" style="background-color:${colors.backgroundColor};color:${colors.textColor};">${line.route_short_name}</div>`;
-                    }).join('');
-					
+                    
+					}).join('')
+					:[];
 							
 				// Vérifier si la description contien une url
 				//const description = alert.description || '';
