@@ -141,6 +141,7 @@
             font-family: FiraSans-Regular;
             font-size: clamp(12px, 10vw, 24pt);
             margin-bottom: 24px;
+			line-height: 1.5;
         }
 
         .lines-container {
@@ -427,6 +428,7 @@
                 card.classList.add('card');
 				
 				const description = alert.description || '';
+				const formattedDescription = description.replace(/\n/g, "<br>"); //convertir les \n en <br>
 				const detectedURL = containsURL (description);
 				
 				console.log('Description:', description);
@@ -503,7 +505,7 @@
                     </div>
                     <div class="disruption_text">
                         <div class="disruptionTitle"><p><strong></strong> ${summary}</p></div>
-                        <div class="disruptionText"><p><strong></strong> ${description}</p></div>
+                        <div class="disruptionText">${formattedDescription}</div>
                     </div>
                 `;
                 
